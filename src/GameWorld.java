@@ -59,22 +59,25 @@ public class GameWorld extends World {
     }
 
     private void spawnCoin() {
+
         Coin coin = new Coin(this);
 
-        // Random X between LEFT_BOUND+2 and RIGHT_BOUND-2
-        float x = (LEFT_BOUND + 2f) + rng.nextFloat() * ((RIGHT_BOUND - 2f) - (LEFT_BOUND + 2f));
-
+        float x = -20f + rng.nextFloat() * 40f;
         coin.setPosition(new Vec2(x, COIN_START_Y));
 
-        // When car touches coin -> increase score and remove coin
-        coin.addCollisionListener(new CollisionListener() {
-            @Override
-            public void collide(CollisionEvent e) {
-                if (e.getOtherBody() == car) {
-                    car.addScore(1);
-                    coin.destroy();
-                }
+        coin.addCollisionListener(e -> {
+
+            // If coin hits car → collect coin
+            if (e.getOtherBody() == car) {
+                car.addScore(1);
+                coin.destroy();
             }
+
+            // If coin hits ground → destroy coin
+            if (e.getOtherBody() instanceof StaticBody) {
+                coin.destroy();
+            }
+
         });
     }
 }
