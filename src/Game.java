@@ -1,35 +1,41 @@
-import city.cs.engine.*;
 import javax.swing.JFrame;
 
 // Main entry point of the game
 public class Game {
 
-    // Encapsulation: private fields
+    // Encapsulation: keep these private
     private GameWorld world;
     private GameView view;
 
     public Game() {
 
-        // Create world
+        // Create custom world (your level)
         world = new GameWorld();
 
-        // Create view
+        // Create view (what you see)
         view = new GameView(world, 800, 600);
 
-        // Create window
+        // Put view into a window
         JFrame frame = new JFrame("Car Coin Game");
-
         frame.add(view);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.pack();
         frame.setVisible(true);
 
-        // Start physics
+        // IMPORTANT: make sure view can receive key presses
+        view.setFocusable(true);
+        view.requestFocusInWindow();
+
+        // Add keyboard controls
+        CarController controller = new CarController(world.getCar());
+        view.addKeyListener(controller);
+
+        // Start physics simulation
         world.start();
     }
 
-    // Main method (PROGRAM STARTS HERE)
+    // Program starts here
     public static void main(String[] args) {
         new Game();
     }
