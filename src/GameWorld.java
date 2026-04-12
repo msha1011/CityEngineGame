@@ -11,7 +11,7 @@ public class GameWorld extends World {
     private Car car;
     private final Random rng = new Random();
 
-    // Adjust these if you want wider/narrower play area
+    // Adjust these if you want wider
     private static final float LEFT_BOUND = -22f;
     private static final float RIGHT_BOUND = 22f;
 

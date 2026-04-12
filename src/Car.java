@@ -1,8 +1,6 @@
 import city.cs.engine.*;
 import org.jbox2d.common.Vec2;
 
-import javax.swing.ImageIcon;
-
 public class Car extends Walker {
 
     private static final Shape carShape = new BoxShape(2f, 1f);
@@ -11,12 +9,14 @@ public class Car extends Walker {
 
     private int score;
     private int lives;
+    private boolean shieldActive;
 
     public Car(World world) {
         super(world, carShape);
         addImage(carImage);
         score = 0;
         lives = 3;
+        shieldActive = false;
     }
 
     public int getScore() {
@@ -36,14 +36,26 @@ public class Car extends Walker {
     }
 
     public void loseLife() {
-        lives--;
+        if (shieldActive) {
+            shieldActive = false;
+        } else {
+            lives--;
+            if (lives < 0) {
+                lives = 0;
+            }
+        }
     }
 
-    public void loseLife(int amount) {
-        lives -= amount;
-        if (lives < 0) {
-            lives = 0;
-        }
+    public boolean isShieldActive() {
+        return shieldActive;
+    }
+
+    public void activateShield() {
+        shieldActive = true;
+    }
+
+    public void deactivateShield() {
+        shieldActive = false;
     }
 
     public void resetPosition() {

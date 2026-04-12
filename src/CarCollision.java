@@ -20,5 +20,10 @@ public class CarCollision implements CollisionListener {
             car.loseLife();
             e.getOtherBody().destroy();
         }
+
+        if (e.getOtherBody() instanceof ShieldPowerUp) {
+            car.activateShield();
+            e.getOtherBody().destroy();
+        }
     }
 }
