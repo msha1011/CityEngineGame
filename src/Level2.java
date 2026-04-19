@@ -16,6 +16,6 @@ public class Level2 extends GameLevel {
 
     @Override
     public double getHazardChance() {
-        return 0.35;
+        return 0.4;
     }
 }

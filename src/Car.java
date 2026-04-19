@@ -5,7 +5,7 @@ public class Car extends Walker {
 
     private static final Shape carShape = new BoxShape(2f, 1f);
     private static final BodyImage carImage =
-            new BodyImage("data/car.png", 2f);
+            new BodyImage("data/car.png", 4f);
 
     private int score;
     private int lives;

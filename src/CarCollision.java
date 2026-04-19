@@ -12,16 +12,19 @@ public class CarCollision implements CollisionListener {
     @Override
     public void collide(CollisionEvent e) {
         if (e.getOtherBody() instanceof Coin) {
+            SoundManager.playSound("data/coin.wav");
             car.addScore();
             e.getOtherBody().destroy();
         }
 
         if (e.getOtherBody() instanceof Hazard) {
+            SoundManager.playSound("data/hit.wav");
             car.loseLife();
             e.getOtherBody().destroy();
         }
 
         if (e.getOtherBody() instanceof ShieldPowerUp) {
+            SoundManager.playSound("data/shield.wav");
             car.activateShield();
             e.getOtherBody().destroy();
         }

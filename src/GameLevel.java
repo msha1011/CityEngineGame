@@ -4,7 +4,7 @@ import org.jbox2d.common.Vec2;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
-
+import java.awt.Color;
 public abstract class GameLevel extends World {
 
     protected Car car;
@@ -17,6 +17,9 @@ public abstract class GameLevel extends World {
 
     private int timeRemaining;
     private int targetScore;
+
+    private float lastSpawnX = 0f;
+    private float secondLastSpawnX = 0f;
 
     public GameLevel(int targetScore, int timeLimitSeconds) {
         super();
@@ -32,7 +35,9 @@ public abstract class GameLevel extends World {
 
     private void setupWalls() {
         ground = new StaticBody(this, new BoxShape(20, 0.5f));
-        ground.setPosition(new Vec2(0, -10));
+        ground.setPosition(new Vec2(0, -9.3f));
+        ground.setFillColor(new Color(0, 0, 0, 0));
+        ground.setLineColor(new Color(0, 0, 0, 0));
 
         leftWall = new StaticBody(this, new BoxShape(0.5f, 10));
         leftWall.setPosition(new Vec2(-20, 0));
@@ -57,7 +62,7 @@ public abstract class GameLevel extends World {
                     spawnHazard();
                 }
 
-                if (Math.random() < 0.3) {
+                if (Math.random() < 0.1) {
                     spawnShieldPowerUp();
                 }
             }
@@ -75,23 +80,41 @@ public abstract class GameLevel extends World {
         levelTimer.start();
     }
 
+    private float getSafeSpawnX() {
+        float x;
+        int attempts = 0;
+
+        do {
+            x = (float) (Math.random() * 16 - 8);
+            attempts++;
+        } while (
+                attempts < 20 &&
+                        (Math.abs(x - lastSpawnX) < 1.8f || Math.abs(x - secondLastSpawnX) < 1.2f)
+        );
+
+        secondLastSpawnX = lastSpawnX;
+        lastSpawnX = x;
+
+        return x;
+    }
+
     public void spawnCoin() {
         Coin coin = new Coin(this);
-        float x = (float) (Math.random() * 16 - 8);
+        float x = getSafeSpawnX();
         coin.setPosition(new Vec2(x, 9));
         coin.addCollisionListener(new GroundRemover(ground));
     }
 
     public void spawnHazard() {
         Hazard hazard = new Hazard(this);
-        float x = (float) (Math.random() * 16 - 8);
+        float x = getSafeSpawnX();
         hazard.setPosition(new Vec2(x, 9));
         hazard.addCollisionListener(new GroundRemover(ground));
     }
 
     public void spawnShieldPowerUp() {
         ShieldPowerUp shield = new ShieldPowerUp(this);
-        float x = (float) (Math.random() * 16 - 8);
+        float x = getSafeSpawnX();
         shield.setPosition(new Vec2(x, 9));
         shield.addCollisionListener(new GroundRemover(ground));
     }

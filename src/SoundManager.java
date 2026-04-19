@@ -6,6 +6,7 @@ public class SoundManager {
 
     private static Clip backgroundClip;
     private static boolean muted = false;
+    private static String currentBackgroundPath;
 
     public static void playSound(String filePath) {
         if (muted) return;
@@ -21,6 +22,8 @@ public class SoundManager {
     }
 
     public static void playBackgroundMusic(String filePath) {
+        currentBackgroundPath = filePath;
+
         if (muted) return;
 
         try {
@@ -43,5 +46,19 @@ public class SoundManager {
             backgroundClip.stop();
             backgroundClip.close();
         }
+    }
+
+    public static void toggleMute() {
+        muted = !muted;
+
+        if (muted) {
+            stopBackgroundMusic();
+        } else if (currentBackgroundPath != null) {
+            playBackgroundMusic(currentBackgroundPath);
+        }
+    }
+
+    public static boolean isMuted() {
+        return muted;
     }
 }
